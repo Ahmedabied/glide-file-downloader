@@ -40,58 +40,7 @@
         <div id="status" class="status"></div>
     </div>
 
-    <script>
-        window.function = async function(text) {
-            try {
-                const statusDiv = document.getElementById('status');
-                statusDiv.className = 'status';
-                statusDiv.textContent = 'Processing...';
-
-                // Parse the input text
-                const parts = text.value.split(',').map(part => part.trim());
-                
-                // Extract URLs from the input
-                const urls = parts.filter(part => part.startsWith('http'));
-                
-                if (urls.length === 0) {
-                    throw new Error('No valid URLs found in the input');
-                }
-
-                // Create a new zip file
-                const zip = new JSZip();
-
-                // Download and add files to zip
-                const downloadPromises = urls.map(async (url, index) => {
-                    try {
-                        const response = await fetch(url);
-                        const blob = await response.blob();
-                        const filename = `file_${index + 1}${url.substring(url.lastIndexOf('.'))}`;
-                        zip.file(filename, blob);
-                    } catch (error) {
-                        console.error(`Error downloading ${url}:`, error);
-                    }
-                });
-
-                await Promise.all(downloadPromises);
-
-                // Generate the zip file
-                const content = await zip.generateAsync({type: 'blob'});
-                
-                // Create download link
-                const downloadUrl = URL.createObjectURL(content);
-                
-                // Update status
-                statusDiv.className = 'status success';
-                statusDiv.textContent = 'Files processed successfully!';
-
-                return downloadUrl;
-            } catch (error) {
-                const statusDiv = document.getElementById('status');
-                statusDiv.className = 'status error';
-                statusDiv.textContent = `Error: ${error.message}`;
-                throw error;
-            }
-        };
-    </script>
+    <script src="function.js"></script>
+    <script src="driver.js"></script>
 </body>
 </html>
