@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glide File Processor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Glide File Processor</h1>
+        <div id="status" class="status"></div>
+    </div>
+
+    <script>
+        window.function = async function(text) {
+            try {
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status';
+                statusDiv.textContent = 'Processing...';
+
+                // Parse the input text
+                const parts = text.value.split(',').map(part => part.trim());
+                
+                // Extract URLs from the input
+                const urls = parts.filter(part => part.startsWith('http'));
+                
+                if (urls.length === 0) {
+                    throw new Error('No valid URLs found in the input');
+                }
+
+                // Create a new zip file
+                const zip = new JSZip();
+
+                // Download and add files to zip
+                const downloadPromises = urls.map(async (url, index) => {
+                    try {
+                        const response = await fetch(url);
+                        const blob = await response.blob();
+                        const filename = `file_${index + 1}${url.substring(url.lastIndexOf('.'))}`;
+                        zip.file(filename, blob);
+                    } catch (error) {
+                        console.error(`Error downloading ${url}:`, error);
+                    }
+                });
+
+                await Promise.all(downloadPromises);
+
+                // Generate the zip file
+                const content = await zip.generateAsync({type: 'blob'});
+                
+                // Create download link
+                const downloadUrl = URL.createObjectURL(content);
+                
+                // Update status
+                statusDiv.className = 'status success';
+                statusDiv.textContent = 'Files processed successfully!';
+
+                return downloadUrl;
+            } catch (error) {
+                const statusDiv = document.getElementById('status');
+                statusDiv.className = 'status error';
+                statusDiv.textContent = `Error: ${error.message}`;
+                throw error;
+            }
+        };
+    </script>
+</body>
+</html>

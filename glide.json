@@ -1,0 +1,18 @@
+[
+  {
+    "kind": "column",
+    "name": "Substring",
+    "description": "Makes a downloadable zipfile of all the images",
+    "author": "Ahmed Abied",
+    "params": [
+      {
+        "name": "p1",
+        "displayName": "String",
+        "type": "string"
+      }
+    ],
+    "result": {
+      "type": "string"
+    }
+  }
+]
