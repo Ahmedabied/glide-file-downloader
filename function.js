@@ -1,27 +1,24 @@
 // function.js
 
-window.function = async function(text) {
+window.function = function(text) {
   try {
-    if (!text.value) {
-      throw new Error('No input text provided');
+    // Check if input text is defined
+    if (!text || text.value === undefined) {
+      return "";
     }
     
-    // Call our Netlify function
-    const response = await fetch('/api/process-urls', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text: text.value })
-    });
+    // Parse the input text
+    const parts = text.value.split(',').map(part => part.trim());
     
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to process URLs');
+    // Extract URLs from the input
+    const urls = parts.filter(part => part.startsWith('http'));
+    
+    if (urls.length === 0) {
+      return "No valid URLs found";
     }
     
-    const data = await response.json();
-    return data.result;
+    // Return the processed URLs
+    return urls.join(',');
     
   } catch (error) {
     console.error('Error:', error);
