@@ -1,14 +1,15 @@
 [
   {
     "kind": "column",
-    "name": "Substring",
-    "description": "Makes a downloadable zipfile of all the images",
+    "name": "URL Processor",
+    "description": "Processes URLs and returns formatted results",
     "author": "Ahmed Abied",
     "params": [
       {
         "name": "p1",
-        "displayName": "String",
-        "type": "string"
+        "displayName": "URLs",
+        "type": "string",
+        "description": "Comma-separated URLs to process"
       }
     ],
     "result": {

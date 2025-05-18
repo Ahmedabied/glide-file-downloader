@@ -2,42 +2,29 @@
 
 window.function = async function(text) {
   try {
-    // Parse the input text
-    const parts = text.value.split(',').map(part => part.trim());
-    
-    // Extract URLs from the input
-    const urls = parts.filter(part => part.startsWith('http'));
-    
-    if (urls.length === 0) {
-      throw new Error('No valid URLs found in the input');
+    if (!text.value) {
+      throw new Error('No input text provided');
     }
-
-    // Create a new zip file using JSZip (loaded from CDN in index.html)
-    const zip = new JSZip();
-
-    // Download and add files to zip
-    const downloadPromises = urls.map(async (url, index) => {
-      try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const filename = `file_${index + 1}${url.substring(url.lastIndexOf('.'))}`;
-        zip.file(filename, blob);
-      } catch (error) {
-        console.error(`Error downloading ${url}:`, error);
-      }
+    
+    // Call our Netlify function
+    const response = await fetch('/api/process-urls', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text: text.value })
     });
-
-    await Promise.all(downloadPromises);
-
-    // Generate the zip file
-    const content = await zip.generateAsync({type: 'blob'});
     
-    // Create download link
-    const downloadUrl = URL.createObjectURL(content);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to process URLs');
+    }
     
-    return downloadUrl;
+    const data = await response.json();
+    return data.result;
+    
   } catch (error) {
     console.error('Error:', error);
-    throw error;
+    return error.message;
   }
 }
