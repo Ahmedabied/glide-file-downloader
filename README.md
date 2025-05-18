@@ -1,45 +1,32 @@
-# Glide URL Processor
+# Glide Experimental Code - Simple String Processor
 
-This tool processes URLs for use with Glide Apps Experimental Code columns. It's designed to be deployed on Netlify.
+A minimal implementation of a Glide experimental code column that processes string values.
 
-## Features
+## Files
 
-- Processes multiple URLs from comma-separated text
-- Uses Netlify serverless functions to handle requests
-- Follows Glide's experimental code column requirements
-- Supports CORS for cross-origin requests
+This project contains only the essential files needed for a Glide experimental code column:
 
-## Setup
+- **glide.json** - Defines the column configuration, parameters, and return type
+- **function.js** - Contains the actual code that processes the input
+- **driver.js** - Handles communication between Glide and your code
+- **index.html** - Loads the necessary JavaScript files
 
-1. Deploy to Netlify:
-   - Fork this repository
-   - Connect to Netlify
-   - Deploy with the following settings:
-     - Build command: (leave blank)
-     - Publish directory: .
-     - Functions directory: netlify/functions
+## How It Works
 
-2. In your Glide app:
-   - Create an Experimental Code column
-   - Set the URL to your Netlify deployment URL
-   - Pass comma-separated URLs as input
+1. Glide loads your code from this URL
+2. The `glide.json` file tells Glide what parameters your code accepts
+3. When a user inputs values in Glide, they're passed to your `function.js` code
+4. Your code processes the values and returns a result
+5. The result is displayed in the Glide app
 
-## Local Development
+## Usage in Glide
 
-```
-npm install
-npm run dev
-```
+1. Create an Experimental Code column in your Glide app
+2. Enter the URL to this repository
+3. Input the required parameters
+4. The result will be calculated for each row
 
-This will start the Netlify development server which allows you to test your functions locally.
+## Simplified Structure
 
-## Technical Details
-
-- Uses Netlify Functions for serverless backend
-- All processing happens server-side
-- Follows Glide's experimental code column conventions
-- Properly handles CORS for browser access
-
-## Deployment Status
-
-The site is deployed at: https://glidehelper.netlify.app
+This implementation follows the minimalist approach demonstrated by the working example at:
+https://replit.com/@Ahmedabied/Zip-maker
