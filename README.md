@@ -2,6 +2,8 @@
 
 This tool downloads files from URLs, creates a zip archive, and returns a download link. It's designed for use with Glide Apps Experimental Code columns.
 
+[![Deploy GitHub Pages](https://github.com/Ahmedabied/glide-file-downloader/actions/workflows/pages.yml/badge.svg)](https://github.com/Ahmedabied/glide-file-downloader/actions/workflows/pages.yml)
+
 ## Features
 
 - Downloads multiple files from URLs provided in comma-separated text
@@ -23,3 +25,7 @@ This tool uses:
 - FileSaver.js for handling file downloads
 - Client-side JavaScript for all processing
 - GitHub Pages for hosting
+
+## Deployment Status
+
+The site is deployed using GitHub Actions for continuous deployment. The site should be available at: https://ahmedabied.github.io/glide-file-downloader/
